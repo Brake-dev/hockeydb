@@ -1,8 +1,8 @@
 package com.hockeydb.hockeydb.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,9 @@ public class TeamController {
     private TeamRepository teamRepo;
 
     @GetMapping("/teams")
-    public ResponseEntity<List<Team>> getTeams() {
+    public ResponseEntity<Set<Team>> getTeams() {
         try {
-            List<Team> teams = new ArrayList<Team>();
+            Set<Team> teams = new HashSet<Team>();
 
             teamRepo.findAll().forEach(teams::add);
 

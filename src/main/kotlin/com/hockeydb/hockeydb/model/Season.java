@@ -2,6 +2,8 @@ package com.hockeydb.hockeydb.model;
 
 import java.util.Set;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,6 +24,7 @@ public class Season {
     @JoinTable(name = "team_seasons", joinColumns = { @JoinColumn(name = "season_id") }, inverseJoinColumns = {
             @JoinColumn(name = "team_id")
     })
+    @JsonIgnore
     private Set<Team> teams;
 
     public UUID getID() {

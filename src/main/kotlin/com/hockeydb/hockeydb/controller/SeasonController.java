@@ -1,8 +1,8 @@
 package com.hockeydb.hockeydb.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class SeasonController {
     private SeasonRepository seasonRepo;
 
     @GetMapping("/seasons")
-    public ResponseEntity<List<Season>> getSeasons() {
+    public ResponseEntity<Set<Season>> getSeasons() {
         try {
-            List<Season> seasons = new ArrayList<Season>();
+            Set<Season> seasons = new HashSet<Season>();
 
             seasonRepo.findAll().forEach(seasons::add);
 
@@ -56,9 +56,9 @@ public class SeasonController {
     }
 
     @GetMapping("/seasons/{id}/teams")
-    public ResponseEntity<List<Team>> getTeamsForSeason(@PathVariable UUID id) {
+    public ResponseEntity<Set<Team>> getTeamsForSeason(@PathVariable UUID id) {
         try {
-            List<Team> teams = new ArrayList<Team>();
+            Set<Team> teams = new HashSet<Team>();
 
             seasonRepo.findById(id).get().getTeams().forEach(teams::add);
 

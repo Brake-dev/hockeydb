@@ -2,6 +2,7 @@ package com.hockeydb.hockeydb.model;
 
 import java.util.Set;
 import java.util.UUID;
+
 import jakarta.persistence.*;
 
 @Entity
