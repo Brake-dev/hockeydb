@@ -28,6 +28,12 @@ public class Team {
     }, mappedBy = "teams")
     private Set<Season> seasons;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, mappedBy = "team")
+    private Set<TeamStats> teamStats;
+
     public UUID getID() {
         return teamId;
     }

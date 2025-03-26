@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hockeydb.hockeydb.model.Skater;
-import com.hockeydb.hockeydb.repository.SkaterRepository;
+import com.hockeydb.hockeydb.model.TeamStats;
+import com.hockeydb.hockeydb.repository.TeamStatsRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api")
-public class SkaterController {
+public class TeamStatsController {
 
     @Autowired
-    private SkaterRepository skaterRepo;
+    private TeamStatsRepository teamStatsRepo;
 
-    @GetMapping("/skater/{id}")
-    public ResponseEntity<Skater> getSkaterById(@PathVariable UUID id) {
-        Optional<Skater> skaterData = skaterRepo.findById(id);
+    @GetMapping("/team/stats/{id}")
+    public ResponseEntity<TeamStats> getTeamStatsById(@PathVariable UUID id) {
+        Optional<TeamStats> teamStatsData = teamStatsRepo.findById(id);
 
-        if (skaterData.isPresent()) {
-            return new ResponseEntity<>(skaterData.get(), HttpStatus.OK);
+        if (teamStatsData.isPresent()) {
+            return new ResponseEntity<>(teamStatsData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,4 +1,4 @@
--- BEGIN;
+BEGIN;
 
 CREATE TABLE season (
     season_id           uuid PRIMARY KEY,
@@ -19,6 +19,7 @@ CREATE TABLE team_seasons (
 );
 
 CREATE TABLE team_stats (
+    team_stats_id       uuid PRIMARY KEY,
     team_id             uuid REFERENCES team,
     season_id           uuid REFERENCES season,
     games               integer,
@@ -56,6 +57,7 @@ CREATE TABLE skater_seasons (
 );
 
 CREATE TABLE skater_stats (
+    skater_stats_id         uuid PRIMARY KEY,
     skater_id               uuid REFERENCES skater,
     season_id               uuid REFERENCES season,
     games_played            integer,
@@ -94,6 +96,7 @@ CREATE TABLE goalie_seasons (
 );
 
 CREATE TABLE goalie_stats (
+    goalie_stats_id         uuid PRIMARY KEY,
     goalie_id               uuid REFERENCES goalie,
     season_id               uuid REFERENCES season,
     games_played            integer,
@@ -162,4 +165,4 @@ CREATE TABLE team_games (
     PRIMARY KEY (game_id, team_id, season_id)
 );
 
---COMMIT;
+COMMIT;

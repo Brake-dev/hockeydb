@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hockeydb.hockeydb.model.Season;
 import com.hockeydb.hockeydb.model.Team;
+import com.hockeydb.hockeydb.model.TeamStats;
 import com.hockeydb.hockeydb.repository.SeasonRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -66,6 +67,22 @@ public class SeasonController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(teams, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/seasons/{seasonId}/teams/{teamId}/stats")
+    public ResponseEntity<TeamStats> getTeamStatsForSeason(@PathVariable UUID seasonId, @PathVariable UUID teamId) {
+        try {
+            Optional<TeamStats> teamStatsData = seasonRepo.findById(seasonId).get().getTeamStats(teamId);
+
+            if (teamStatsData.isPresent()) {
+                return new ResponseEntity<>(teamStatsData.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

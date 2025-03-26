@@ -8,12 +8,12 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class Skater {
+public class Goalie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "skater_id")
-    private UUID skaterId;
+    @Column(name = "goalie_id")
+    private UUID goalieId;
 
     @Column(columnDefinition = "bpchar")
     private String name;
@@ -34,11 +34,8 @@ public class Skater {
     private String birthplace;
 
     @Column(columnDefinition = "bpchar")
-    private String shoots;
+    private String catches;
 
     @Column(columnDefinition = "bpchar")
     private String draft;
-
-    @Column(columnDefinition = "bpchar")
-    private String position;
 }
