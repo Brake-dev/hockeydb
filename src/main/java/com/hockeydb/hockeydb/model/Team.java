@@ -1,6 +1,7 @@
 package com.hockeydb.hockeydb.model;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -26,13 +27,13 @@ public class Team {
             CascadeType.PERSIST,
             CascadeType.MERGE
     }, mappedBy = "teams")
-    private Set<Season> seasons;
+    private List<Season> seasons;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     }, mappedBy = "team")
-    private Set<TeamStats> teamStats;
+    private List<TeamStats> teamStats;
 
     public UUID getID() {
         return teamId;
@@ -48,5 +49,11 @@ public class Team {
 
     public String getConference() {
         return conference;
+    }
+
+    public Optional<TeamStats> getTeamStats(UUID seasonId) {
+        return teamStats.stream().filter(
+                stats -> teamId.equals(stats.getTeam().getID()) && seasonId.equals(stats.getSeason().getID()))
+                .findAny();
     }
 }

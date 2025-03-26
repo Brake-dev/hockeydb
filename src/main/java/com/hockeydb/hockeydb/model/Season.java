@@ -1,7 +1,6 @@
 package com.hockeydb.hockeydb.model;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,12 +27,6 @@ public class Season {
     @JsonIgnore
     private List<Team> teams;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    }, mappedBy = "season")
-    private List<TeamStats> teamStats;
-
     public UUID getID() {
         return seasonId;
     }
@@ -44,11 +37,5 @@ public class Season {
 
     public List<Team> getTeams() {
         return teams;
-    }
-
-    public Optional<TeamStats> getTeamStats(UUID teamId) {
-        return teamStats.stream().filter(
-                stats -> teamId.equals(stats.getTeam().getID()) && seasonId.equals(stats.getSeason().getID()))
-                .findAny();
     }
 }

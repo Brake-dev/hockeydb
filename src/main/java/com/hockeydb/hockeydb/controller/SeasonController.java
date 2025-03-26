@@ -1,8 +1,8 @@
 package com.hockeydb.hockeydb.controller;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hockeydb.hockeydb.model.Season;
 import com.hockeydb.hockeydb.model.Team;
-import com.hockeydb.hockeydb.model.TeamStats;
 import com.hockeydb.hockeydb.repository.SeasonRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -28,9 +27,9 @@ public class SeasonController {
     private SeasonRepository seasonRepo;
 
     @GetMapping("/seasons")
-    public ResponseEntity<Set<Season>> getSeasons() {
+    public ResponseEntity<List<Season>> getSeasons() {
         try {
-            Set<Season> seasons = new HashSet<Season>();
+            List<Season> seasons = new ArrayList<Season>();
 
             seasonRepo.findAll().forEach(seasons::add);
 
@@ -57,9 +56,9 @@ public class SeasonController {
     }
 
     @GetMapping("/seasons/{id}/teams")
-    public ResponseEntity<Set<Team>> getTeamsForSeason(@PathVariable UUID id) {
+    public ResponseEntity<List<Team>> getTeamsForSeason(@PathVariable UUID id) {
         try {
-            Set<Team> teams = new HashSet<Team>();
+            List<Team> teams = new ArrayList<Team>();
 
             seasonRepo.findById(id).get().getTeams().forEach(teams::add);
 
@@ -67,22 +66,6 @@ public class SeasonController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(teams, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/seasons/{seasonId}/teams/{teamId}/stats")
-    public ResponseEntity<TeamStats> getTeamStatsForSeason(@PathVariable UUID seasonId, @PathVariable UUID teamId) {
-        try {
-            Optional<TeamStats> teamStatsData = seasonRepo.findById(seasonId).get().getTeamStats(teamId);
-
-            if (teamStatsData.isPresent()) {
-                return new ResponseEntity<>(teamStatsData.get(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

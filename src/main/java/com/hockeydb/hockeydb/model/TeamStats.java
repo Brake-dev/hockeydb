@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.AccessLevel;
 
 @Entity
 @Getter
@@ -14,6 +15,7 @@ public class TeamStats {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "team_stats_id")
+    @Getter(AccessLevel.NONE)
     private UUID teamStatsId;
 
     @ManyToOne
@@ -64,4 +66,8 @@ public class TeamStats {
 
     @Column(columnDefinition = "bpchar")
     private String streak;
+
+    public UUID getID() {
+        return teamStatsId;
+    }
 }

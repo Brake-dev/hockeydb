@@ -1,8 +1,8 @@
 package com.hockeydb.hockeydb.controller;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hockeydb.hockeydb.model.Team;
+import com.hockeydb.hockeydb.model.TeamStats;
 import com.hockeydb.hockeydb.repository.TeamRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
@@ -26,9 +27,9 @@ public class TeamController {
     private TeamRepository teamRepo;
 
     @GetMapping("/teams")
-    public ResponseEntity<Set<Team>> getTeams() {
+    public ResponseEntity<List<Team>> getTeams() {
         try {
-            Set<Team> teams = new HashSet<Team>();
+            List<Team> teams = new ArrayList<Team>();
 
             teamRepo.findAll().forEach(teams::add);
 
@@ -50,6 +51,22 @@ public class TeamController {
             return new ResponseEntity<>(teamData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/teams/{teamId}/seasons/{seasonId}/stats")
+    public ResponseEntity<TeamStats> getTeamStatsForSeason(@PathVariable UUID seasonId, @PathVariable UUID teamId) {
+        try {
+            Optional<TeamStats> teamStatsData = teamRepo.findById(teamId).get().getTeamStats(seasonId);
+
+            if (teamStatsData.isPresent()) {
+                return new ResponseEntity<>(teamStatsData.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
