@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.AccessLevel;
 
 @Entity
 @Getter
@@ -12,16 +13,8 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "game_id")
+    @Getter(AccessLevel.NONE)
     private UUID gameId;
-
-    @Column
-    private UUID seasonId;
-
-    @Column
-    private UUID homeTeam;
-
-    @Column
-    private UUID awayTeam;
 
     @Column
     private Boolean overtime;
@@ -82,4 +75,8 @@ public class Game {
 
     @Column
     private Integer awayTeamTakeaways;
+
+    public UUID getID() {
+        return gameId;
+    }
 }

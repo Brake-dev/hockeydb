@@ -128,12 +128,8 @@ CREATE TABLE team_goalies (
     PRIMARY KEY (team_id, goalie_id, season_id)
 );
 
-
 CREATE TABLE game (
     game_id                     uuid PRIMARY KEY,
-    season_id                   uuid REFERENCES season,
-    home_team                   uuid REFERENCES team,
-    away_team                   uuid REFERENCES team,
     overtime                    boolean,
     shootout                    boolean,
 
@@ -160,9 +156,10 @@ CREATE TABLE game (
 
 CREATE TABLE team_games (
     game_id                 uuid REFERENCES game,
-    team_id                 uuid REFERENCES team,
+    home_team_id            uuid REFERENCES team(team_id),
+    away_team_id            uuid REFERENCES team(team_id),
     season_id               uuid REFERENCES season,
-    PRIMARY KEY (game_id, team_id, season_id)
+    PRIMARY KEY (game_id, home_team_id, away_team_id, season_id)
 );
 
 COMMIT;
