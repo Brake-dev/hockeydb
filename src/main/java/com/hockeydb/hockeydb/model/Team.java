@@ -35,6 +35,30 @@ public class Team {
     }, mappedBy = "team")
     private List<TeamStats> teamStats;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, mappedBy = "homeTeam")
+    private List<TeamGames> homeGames;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, mappedBy = "awayTeam")
+    private List<TeamGames> awayGames;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, mappedBy = "team")
+    private List<TeamSkaters> skaters;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, mappedBy = "team")
+    private List<TeamGoalies> goalies;
+
     public UUID getID() {
         return teamId;
     }
@@ -55,5 +79,21 @@ public class Team {
         return teamStats.stream().filter(
                 stats -> teamId.equals(stats.getTeam().getID()) && seasonId.equals(stats.getSeason().getID()))
                 .findAny();
+    }
+
+    public List<TeamGames> getHomeGames(UUID seasonId) {
+        return homeGames.stream().filter(games -> seasonId.equals(games.getSeason().getID())).toList();
+    }
+
+    public List<TeamGames> getAwayGames(UUID seasonId) {
+        return awayGames.stream().filter(games -> seasonId.equals(games.getSeason().getID())).toList();
+    }
+
+    public List<TeamSkaters> getSkaters(UUID seasonId) {
+        return skaters.stream().filter(skaters -> seasonId.equals(skaters.getSeason().getID())).toList();
+    }
+
+    public List<TeamGoalies> getGoalies(UUID seasonId) {
+        return goalies.stream().filter(goalies -> seasonId.equals(goalies.getSeason().getID())).toList();
     }
 }

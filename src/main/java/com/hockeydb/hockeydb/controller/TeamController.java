@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hockeydb.hockeydb.model.Team;
+import com.hockeydb.hockeydb.model.TeamGames;
+import com.hockeydb.hockeydb.model.TeamGoalies;
+import com.hockeydb.hockeydb.model.TeamSkaters;
 import com.hockeydb.hockeydb.model.TeamStats;
 import com.hockeydb.hockeydb.repository.TeamRepository;
 
@@ -61,6 +64,78 @@ public class TeamController {
 
             if (teamStatsData.isPresent()) {
                 return new ResponseEntity<>(teamStatsData.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/teams/{teamId}/seasons/{seasonId}/home")
+    public ResponseEntity<List<TeamGames>> getTeamHomeGamesForSeason(@PathVariable UUID seasonId,
+            @PathVariable UUID teamId) {
+
+        try {
+            List<TeamGames> teamHomeGamesData = teamRepo.findById(teamId).get().getHomeGames(seasonId);
+
+            if (!teamHomeGamesData.isEmpty()) {
+                return new ResponseEntity<>(teamHomeGamesData, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/teams/{teamId}/seasons/{seasonId}/away")
+    public ResponseEntity<List<TeamGames>> getTeamAwayGamesForSeason(@PathVariable UUID seasonId,
+            @PathVariable UUID teamId) {
+
+        try {
+            List<TeamGames> teamAwayGamesData = teamRepo.findById(teamId).get().getAwayGames(seasonId);
+
+            if (!teamAwayGamesData.isEmpty()) {
+                return new ResponseEntity<>(teamAwayGamesData, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/teams/{teamId}/seasons/{seasonId}/skaters")
+    public ResponseEntity<List<TeamSkaters>> getTeamSkatersForSeason(@PathVariable UUID seasonId,
+            @PathVariable UUID teamId) {
+
+        try {
+            List<TeamSkaters> teamSkatersData = teamRepo.findById(teamId).get().getSkaters(seasonId);
+
+            if (!teamSkatersData.isEmpty()) {
+                return new ResponseEntity<>(teamSkatersData, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/teams/{teamId}/seasons/{seasonId}/goalies")
+    public ResponseEntity<List<TeamGoalies>> getTeamGoaliesForSeason(@PathVariable UUID seasonId,
+            @PathVariable UUID teamId) {
+
+        try {
+            List<TeamGoalies> teamGoaliesData = teamRepo.findById(teamId).get().getGoalies(seasonId);
+
+            if (!teamGoaliesData.isEmpty()) {
+                return new ResponseEntity<>(teamGoaliesData, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

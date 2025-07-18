@@ -115,17 +115,17 @@ CREATE TABLE goalie_stats (
 );
 
 CREATE TABLE team_skaters (
+    team_skaters_id         uuid PRIMARY KEY,
     team_id                 uuid REFERENCES team,
     skater_id               uuid REFERENCES skater,
-    season_id               uuid REFERENCES season,
-    PRIMARY KEY (team_id, skater_id, season_id)
+    season_id               uuid REFERENCES season
 );
 
 CREATE TABLE team_goalies (
+    team_goalies_id         uuid PRIMARY KEY,
     team_id                 uuid REFERENCES team,
     goalie_id               uuid REFERENCES goalie,
-    season_id               uuid REFERENCES season,
-    PRIMARY KEY (team_id, goalie_id, season_id)
+    season_id               uuid REFERENCES season
 );
 
 CREATE TABLE game (
@@ -155,11 +155,11 @@ CREATE TABLE game (
 );
 
 CREATE TABLE team_games (
+    team_games_id           uuid PRIMARY KEY,
     game_id                 uuid REFERENCES game,
     home_team_id            uuid REFERENCES team(team_id),
     away_team_id            uuid REFERENCES team(team_id),
-    season_id               uuid REFERENCES season,
-    PRIMARY KEY (game_id, home_team_id, away_team_id, season_id)
+    season_id               uuid REFERENCES season
 );
 
 COMMIT;
