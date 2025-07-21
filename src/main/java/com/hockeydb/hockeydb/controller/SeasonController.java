@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hockeydb.hockeydb.model.Season;
 import com.hockeydb.hockeydb.model.Team;
+import com.hockeydb.hockeydb.dto.SeasonDto;
 import com.hockeydb.hockeydb.repository.SeasonRepository;
+import com.hockeydb.hockeydb.repository.SeasonDtoRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -24,14 +25,17 @@ import com.hockeydb.hockeydb.repository.SeasonRepository;
 public class SeasonController {
 
     @Autowired
+    private SeasonDtoRepository seasonDtoRepo;
+
+    @Autowired
     private SeasonRepository seasonRepo;
 
     @GetMapping("/seasons")
-    public ResponseEntity<List<Season>> getSeasons() {
+    public ResponseEntity<List<SeasonDto>> getSeasons() {
         try {
-            List<Season> seasons = new ArrayList<Season>();
+            List<SeasonDto> seasons = new ArrayList<SeasonDto>();
 
-            seasonRepo.findAll().forEach(seasons::add);
+            seasonDtoRepo.fetchSeasons().forEach(seasons::add);
 
             if (seasons.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -45,8 +49,8 @@ public class SeasonController {
     }
 
     @GetMapping("/seasons/{id}")
-    public ResponseEntity<Season> getSeasonById(@PathVariable UUID id) {
-        Optional<Season> seasonData = seasonRepo.findById(id);
+    public ResponseEntity<SeasonDto> getSeasonById(@PathVariable UUID id) {
+        Optional<SeasonDto> seasonData = seasonDtoRepo.fetchSeasonById(id);
 
         if (seasonData.isPresent()) {
             return new ResponseEntity<>(seasonData.get(), HttpStatus.OK);
