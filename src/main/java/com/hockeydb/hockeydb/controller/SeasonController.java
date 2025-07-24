@@ -2,26 +2,32 @@ package com.hockeydb.hockeydb.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hockeydb.hockeydb.model.Team;
 import com.hockeydb.hockeydb.dto.SeasonDto;
 import com.hockeydb.hockeydb.repository.SeasonRepository;
 import com.hockeydb.hockeydb.repository.SeasonDtoRepository;
+import com.hockeydb.hockeydb.repository.SkaterGoalsRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value = "/api", produces = "application/hockeydb.v1+json")
 public class SeasonController {
 
     @Autowired
@@ -29,6 +35,9 @@ public class SeasonController {
 
     @Autowired
     private SeasonRepository seasonRepo;
+
+    @Autowired
+    private SkaterGoalsRepository skaterGoalsRepo;
 
     @GetMapping("/seasons")
     public ResponseEntity<List<SeasonDto>> getSeasons() {
@@ -70,6 +79,30 @@ public class SeasonController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 return new ResponseEntity<>(teams, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/seasons/{id}/skaters/goals")
+    public ResponseEntity<List<Map<String, Object>>> getSkaterGoalsForSeason(@PathVariable UUID id,
+            @RequestParam Integer page, @RequestParam Integer items, @RequestParam String sort,
+            @RequestParam String sortBy) {
+        try {
+            List<Map<String, Object>> skatersWithStats = new ArrayList<Map<String, Object>>();
+
+            // TODO: get rid of appending table alias to sortBy value
+            Sort sortVal = Sort.by(sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC, "sk_st." + sortBy);
+            Pageable pageCount = PageRequest.of(page, items, sortVal);
+
+            skaterGoalsRepo.fetchSkaterStats(id, pageCount).forEach(skatersWithStats::add);
+
+            if (skatersWithStats.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(skatersWithStats, HttpStatus.OK);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hockeydb.hockeydb.model.Team;
@@ -30,11 +31,20 @@ public class TeamController {
     private TeamRepository teamRepo;
 
     @GetMapping("/teams")
-    public ResponseEntity<List<Team>> getTeams() {
+    public ResponseEntity<List<Team>> getTeams(@RequestParam(required = false) String conference,
+            @RequestParam(required = false) String division) {
         try {
             List<Team> teams = new ArrayList<Team>();
 
             teamRepo.findAll().forEach(teams::add);
+
+            if (conference != null) {
+                teams.removeIf(t -> !t.getConference().equals(conference));
+            }
+
+            if (division != null) {
+                teams.removeIf(t -> !t.getDivision().equals(division));
+            }
 
             if (teams.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -42,6 +52,7 @@ public class TeamController {
 
             return new ResponseEntity<>(teams, HttpStatus.OK);
         } catch (Exception e) {
+            System.err.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
