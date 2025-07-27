@@ -98,7 +98,6 @@ public class SeasonController {
         try {
             List<Map<String, Object>> skatersWithStats = new ArrayList<Map<String, Object>>();
 
-            // TODO: get rid of appending table alias to sortBy value
             Sort sortVal = Sort.by(sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
             Pageable pageCount = PageRequest.of(page, items, sortVal);
 
