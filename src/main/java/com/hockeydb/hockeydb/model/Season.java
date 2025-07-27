@@ -4,13 +4,19 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Season {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "season_id")
+    @Getter(AccessLevel.NONE)
     private UUID seasonId;
 
     @Column(columnDefinition = "bpchar")
@@ -25,15 +31,11 @@ public class Season {
     })
     private List<Team> teams;
 
+    public Season(String name) {
+        this.name = name;
+    }
+
     public UUID getID() {
         return seasonId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Team> getTeams() {
-        return teams;
     }
 }

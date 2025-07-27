@@ -1,4 +1,4 @@
-package com.hockeydb.hockeydb.dto;
+package com.hockeydb.hockeydb.data;
 
 import java.util.UUID;
 
