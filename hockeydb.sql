@@ -1,5 +1,13 @@
 BEGIN;
 
+CREATE TABLE "user" (
+    user_id             uuid PRIMARY KEY,
+    username            varchar(255),
+    email               varchar(255),
+    password            varchar(255),
+    token               varchar(255)
+);
+
 CREATE TABLE season (
     season_id           uuid PRIMARY KEY,
     name                char(9)             -- 2023-2024
